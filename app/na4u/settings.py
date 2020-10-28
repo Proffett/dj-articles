@@ -156,7 +156,7 @@ DATABASES = {
         'HOST': '/var/run/mysqld/mysqld.sock',
         'NAME': 'c3861_t_na4u_ru',
         'USER': 'c3861_t_na4u_ru',
-        'PASSWORD': '********',
+        'PASSWORD': '**********',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
             }
