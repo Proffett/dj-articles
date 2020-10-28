@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %} {{tag.title}} - {{block.super}} {% endblock %}
+
+
+{% block content %}
+<h1 class='mb-5'>Posts with "{{ tag.title|title }}" tag:</h1>
+      {% for post in tag.articles.all %}
+<article class='article_item_list'>
+      <a href="{% url 'articles:post_detail_url' post.slug %}"><h2 class='article_title_list'>{{post.article_title}}</h2>
+            <img class="col-4 article_detail_image" src="{{ post.cover.url }}" alt="{{ post.title }}">
+            <p>{{post.article_text|linebreaksbr}}</p>
+      </a>
+      <em>Date: {{post.pub_date}}</em><br>
+</article>
+{% endfor %}
+
+{% endblock %}

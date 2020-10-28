@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{article.article_title}} {% endblock %}
+
+{% block content %}
+        <article class='article_item_list'>
+            <h1 class='article_detail-h1'>{{article.article_title}}</h1>
+            <img class="col-9 article_detail_image" src="{{ article.cover.url }}" alt="{{ article.title }}">
+            {% autoescape off %}
+            {{article.article_text|linebreaksbr}}
+            {% endautoescape %}
+            <em>Date: {{article.pub_date}}</em><br>
+
+            <!-- TAGS -->
+            <em>Tags:</em>
+            {% for i in article.tags.all %}
+            <em><a href="/articles/tag/{{ i.slug }}">{{ i.title }}</a></em>
+            {% endfor %}
+            <br>
+
+            {% if article.was_published_recently %}
+            <em>New! </em>|
+            <a href="http://vk.com/share.php?url=https://t.na4u.ru{{ article.get_absolute_url }}"   
+                        onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+            target="_blank" rel="nofollow">
+                <img src="{% static 'images/social/vk-box.png' %}">
+            </a>
+            <a href="https://twitter.com/share?url=https://t.na4u.ru{{ article.get_absolute_url }}"   
+                        onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+            target="_blank" rel="nofollow">
+                <img src="{% static 'images/social/twitter-box.png' %}">
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://t.na4u.ru{{ article.get_absolute_url }}" 
+                        onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+            target="_blank" rel="nofollow">
+                <img src="{% static 'images/social/facebook-box.png' %}">
+            </a>
+        </article>
+            {% endif %}
+            <hr>
+            <h4>Comments</h4>
+            {% for comm in comments.all %}
+                {{comm.comment_user}}<br><b>{{comm.comment_text}}</b> <br><em>{{comm.pub_date}}</em><br><br>
+            {% endfor %}
+
+                {% comment %} {% for c in comment.comment_article.all %}
+                <p>
+                    <strong>{{c.article_title}}</strong>
+                    <p>{{c.comment_text}}</p>
+                    <em>{{c.pub_date}}</em>
+                </p><br>
+                {% endfor %} {% endcomment %}
+            {% comment %} {{ request.user }} {% endcomment %}
+            {% if user.is_authenticated %}
+
+                <form action="{{ articles.get_absolute_url }}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class='form-group'>
+                            {% comment %} <input type="hidden" name="comment_user" class="form-control" maxlength="200" required="" id="id_comment_user">{{user}}</input> {% endcomment %}
+                        {% for field in form %}
+                            {% if field.errors %}
+                                <div class='alert alert-danger'>
+                                    {{ field.errors }}
+                                </div>
+                            {% endif %}
+                            {{ field.label }}
+                            {{ field }}
+                        {% endfor %}
+                        <button type="submit" name='button' class='btn btn-primary'>Comment</button>
+                        </div>
+                </form>
+            {% endif %}
+                    <!-- like-dislike -->
+            <ul>
+                <li data-id="{{ like_obj.id }}" data-type="article" data-action="like" title="Нравится">
+                    <span class="">like</span>
+                    <span data-count="like">{{ like_obj.votes.likes.count }}</span>
+                </li>
+                <li data-id="{{ like_obj.id }}" data-type="article" data-action="dislike" title="Не нравится">
+                    <span class="">dis</span>
+                    <span data-count="dislike">{{ like_obj.votes.dislikes.count }}</span>
+                </li>
+            </ul>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} Tags list - {{ blog.super }} {% endblock %}
+
+{% block content %}
+<article class='article_item_list'>
+<h1>Теги:</h1>
+    {% if tags %}
+        {% for tag in tags.all %}
+            <h3><a href="/articles/tag/{{ tag.slug }}">{{ tag.title }}</a></h3>
+        {% endfor %}
+                
+    {% else %}
+        <h2>Статьи не найдены</h2>
+    {% endif %}
+ </article>   
+
+{% endblock %}
+
+
+
+
+
